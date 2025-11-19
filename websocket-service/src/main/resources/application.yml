@@ -1,0 +1,39 @@
+# 服务配置
+server:
+  port: 8085
+
+spring:
+  application:
+    name: websocket-service
+
+  # Kafka配置
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-workers
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.zyn.common.dto.event
+
+  # Redis配置（可选，用于分布式会话管理）
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      database: 0
+
+# WebSocket配置
+websocket:
+  max-connections: 10000
+  heartbeat-interval: 30000  # 心跳间隔（毫秒）
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.zyn.websocket: DEBUG
+    org.springframework.web.socket: DEBUG

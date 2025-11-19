@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/video_detection_dev
+
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    com.zyn.auth: DEBUG

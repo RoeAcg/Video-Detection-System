@@ -1,0 +1,53 @@
+# 服务配置
+server:
+  port: 8083
+
+spring:
+  application:
+    name: worker-service
+
+  # 数据库配置
+  datasource:
+    url: jdbc:postgresql://localhost:5432/video_detection
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  # JPA配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Kafka消费者配置
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: detection-workers
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.zyn.common.dto.event
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: detectionCompleted:com.zyn.common.dto.event.DetectionCompletedEvent
+
+# AI服务配置
+ai:
+  service:
+    url: http://localhost:5000
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.zyn.worker: DEBUG
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN

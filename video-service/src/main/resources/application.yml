@@ -1,0 +1,60 @@
+# 服务配置
+server:
+  port: 8083
+
+spring:
+  application:
+    name: video-service
+  servlet:
+    multipart:
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+      enabled: true
+  # 数据库配置
+  datasource:
+    url: jdbc:postgresql://localhost:5432/video_detection
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  # JPA配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Kafka配置
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: detectionTask:com.zyn.common.dto.event.DetectionTaskEvent
+
+# 文件存储配置
+file:
+  storage:
+    upload-dir: ./uploads
+    chunk-dir: ./chunks
+    max-file-size: 2147483648  # 2GB
+    allowed-types:
+      - mp4
+      - avi
+      - mov
+      - mkv
+      - webm
+
+# JWT 配置
+jwt:
+  secret: mySecretKeyForJWTTokenGenerationAndValidation12345678901234567890
+  expiration: 86400000  # 24小时（毫秒）
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.zyn.video: DEBUG

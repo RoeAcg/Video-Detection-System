@@ -1,0 +1,15 @@
+# AI客户端配置
+ai:
+  service:
+    url: http://localhost:5000
+  client:
+    connect-timeout: 10000    # 连接超时（毫秒）
+    read-timeout: 120000      # 读取超时（毫秒）
+    max-retries: 3
+    retry-interval: 1000
+
+# 日志配置
+logging:
+  level:
+    com.zyn.aiclient: DEBUG
+    feign: DEBUG
