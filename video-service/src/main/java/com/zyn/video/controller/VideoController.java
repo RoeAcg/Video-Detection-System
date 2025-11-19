@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 /**
  * 视频控制器
  */
@@ -145,7 +147,31 @@ public class VideoController {
      * 从认证信息中获取用户ID
      */
     private Long getUserIdFromAuth(Authentication authentication) {
-        // 这里简化处理，实际应该从JWT中解析
-        return 1L; // TODO: 从JWT token中获取真实用户ID
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.error("❌ 未认证的请求");
+            throw new RuntimeException("未认证");
+        }
+
+        try {
+            // ⭐ 从 details 中获取 userId（由 JwtAuthenticationFilter 设置）
+            @SuppressWarnings("unchecked")
+            Map<String, Object> details = (Map<String, Object>) authentication.getDetails();
+
+            if (details == null || !details.containsKey("userId")) {
+                log.error("❌ Authentication details 中没有 userId");
+                log.error("Authentication: {}", authentication);
+                log.error("Principal: {}", authentication.getPrincipal());
+                log.error("Details: {}", authentication.getDetails());
+                throw new RuntimeException("无法获取用户信息");
+            }
+
+            Long userId = (Long) details.get("userId");
+            log.debug("✅ 从 Authentication 获取 userId: {}", userId);
+            return userId;
+
+        } catch (ClassCastException e) {
+            log.error("❌ 无法从 Authentication 中提取 userId: {}", e.getMessage());
+            throw new RuntimeException("认证信息格式错误");
+        }
     }
 }

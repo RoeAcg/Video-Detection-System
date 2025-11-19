@@ -13,18 +13,19 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * JWT 认证过滤器（纯过滤器，无 Spring 注解）
+ * JWT 认证过滤器
  */
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    // ⭐ 通过构造函数注入
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
@@ -42,21 +43,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Long userId = jwtUtil.getUserIdFromToken(token);
                 List<String> roles = jwtUtil.getRolesFromToken(token);
 
+                log.debug("Token 验证成功 - username: {}, userId: {}, roles: {}", username, userId, roles);
+
                 List<SimpleGrantedAuthority> authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userId, null, authorities);
+                        new UsernamePasswordAuthenticationToken(username, null, authorities);
 
-                authentication.setDetails(username);
+                Map<String, Object> details = new HashMap<>();
+                details.put("userId", userId);
+                details.put("username", username);
+                details.put("roles", roles);
+                authentication.setDetails(details);
+
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                log.debug("JWT 认证成功 - 用户: {}, ID: {}", username, userId);
+                log.debug("✅ JWT 认证成功 - principal: {}, userId: {}",
+                        authentication.getName(), userId);
+            } else {
+                log.debug("Token 无效或不存在");
             }
 
         } catch (Exception e) {
-            log.error("JWT 认证失败: {}", e.getMessage());
+            log.error("❌ JWT 认证失败: {}", e.getMessage(), e);
             SecurityContextHolder.clearContext();
         }
 
