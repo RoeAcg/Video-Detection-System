@@ -1,44 +1,44 @@
 # Video Detection System
 
-基于深度学习的视频深伪检测系统，支持Deepfake和AIGC内容检测。
+A deep learning-based video deepfake detection system supporting Deepfake and AIGC content detection.
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://reactjs.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 📋 项目简介
+## 📋 Project Introduction
 
-Video Detection System 是一个企业级的视频深伪检测平台，采用微服务架构，集成了先进的深度学习模型（Effort、DRCT），提供完整的视频上传、检测、结果分析和审计功能。
+Video Detection System is an enterprise-grade video deepfake detection platform with a microservices architecture, integrating advanced deep learning models (Effort, DRCT), and providing comprehensive video upload, detection, result analysis, and audit functionality.
 
-### 主要特性
+### Key Features
 
-- 🎯 **双模式检测**：支持人脸伪造检测（Deepfake）和通用生成内容检测（AIGC）
-- 🏗️ **微服务架构**：6个独立微服务，易于扩展和维护
-- 🔐 **安全认证**：基于JWT的用户认证和授权机制
-- 📊 **实时通知**：WebSocket实时推送检测进度和结果
-- 📝 **完整审计**：详细的操作日志和审计追踪
-- 🎨 **现代前端**：React + Vite构建的响应式用户界面
-- 🐳 **容器化部署**：完整的Docker Compose配置
+- 🎯 **Dual-Mode Detection**: Support for facial forgery detection (Deepfake) and universal generated content detection (AIGC)
+- 🏗️ **Microservices Architecture**: 6 independent microservices, easy to extend and maintain
+- 🔐 **Secure Authentication**: JWT-based user authentication and authorization mechanism
+- 📊 **Real-time Notifications**: WebSocket real-time push of detection progress and results
+- 📝 **Complete Audit**: Detailed operation logs and audit trails
+- 🎨 **Modern Frontend**: Responsive user interface built with React + Vite
+- 🐳 **Containerized Deployment**: Complete Docker Compose configuration
  
- ## 🖼️ 系统演示
+ ## 🖼️ System Demo
  
- ### 1. 仪表盘
+ ### 1. Dashboard
  ![Dashboard](docs/images/dashboard.png)
  
- ### 2. 视频检测
+ ### 2. Video Detection
  ![Video Detection](docs/images/video_detection.png)
  
- ### 3. 图片检测
+ ### 3. Image Detection
  ![Image Detection](docs/images/image_detection.png)
  
- ### 4. 历史记录
+ ### 4. History
  ![History](docs/images/history.png)
  
- ### 5. 审计日志
+ ### 5. Audit Log
  ![Audit Log](docs/images/audit_log.png)
 
-## 🏛️ 系统架构
+## 🏛️ System Architecture
 
 ```
 ┌─────────────┐
@@ -64,33 +64,34 @@ Video Detection System 是一个企业级的视频深伪检测平台，采用微
 │   (5432)    │ │ (19092) │  │   (6379)    │
 └─────────────┘ └─────────┘  └─────────────┘
        │
-┌──────▼──────────┐
-│  AI Detection   │ (Python Flask)
-│   Service       │
-│    (5000)       │
-└─────────────────┘
+┌──────▼──────────────┐
+│  AI Detection       │ (Python Flask)
+│   Service           │
+│    (5000)           │
+└─────────────────────┘
 ```
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 前置要求
+### Prerequisites
 
 - **Java 17+**
 - **Maven 3.8+**
 - **Node.js 18+**
 - **Docker & Docker Compose**
 - **PostgreSQL 15+**
-- **Python 3.8+** (用于AI服务)
+- **Python 3.10** (for AI services)
+- **CUDA 11.3+** (optional, for GPU acceleration)
 
-### 安装步骤
+### Installation Steps
 
-1. **克隆项目**
+1. **Clone the repository**
    ```bash
    git clone https://github.com/yourusername/video-detection-system.git
    cd video-detection-system
    ```
 
-2. **启动基础设施**
+2. **Start the infrastructure**
    ```bash
    # Windows
    .\start-infra.ps1
@@ -99,7 +100,7 @@ Video Detection System 是一个企业级的视频深伪检测平台，采用微
    docker-compose -f docker-compose-infra.yml up -d
    ```
 
-3. **初始化数据库**
+3. **Initialize the database**
    ```bash
    # Windows
    .\scripts\init-database.ps1
@@ -108,14 +109,14 @@ Video Detection System 是一个企业级的视频深伪检测平台，采用微
    bash scripts/init-database.sh
    ```
 
-4. **编译后端服务**
+4. **Build the backend services**
    ```bash
    mvn clean package -DskipTests
    ```
 
-5. **启动微服务**
+5. **Start the microservices**
    ```bash
-   # 按顺序启动各服务
+   # Start services in the following order
    # 1. auth-service
    # 2. video-service
    # 3. worker-service
@@ -124,155 +125,262 @@ Video Detection System 是一个企业级的视频深伪检测平台，采用微
    # 6. audit-service
    ```
 
-6. **启动前端**
+6. **Start the frontend**
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
 
-7. **访问系统**
-   - 前端: http://localhost:5173
-   - 测试账户: admin / 123456
+7. **Configure and start the AI detection service**
+   ```bash
+   # Refer to the AI Environment Configuration section below
+   ```
 
-## 📚 文档
+8. **Access the system**
+   - Frontend: http://localhost:5173
+   - Test account: admin / 123456
 
-- [API接口文档](docs/API接口文档.md) - 完整的REST API文档
-- [AI客户端API](docs/AI_Client_API_Documentation.md) - AI检测服务接口
-- [脚本使用说明](docs/SCRIPTS.md) - 工具脚本使用指南
-- [端口迁移说明](docs/PORT_MIGRATION.md) - 端口配置变更记录
+## 📚 Documentation
 
-## 🛠️ 技术栈
+- [API Documentation](docs/API接口文档.md) - Complete REST API documentation
+- [AI Client API](docs/AI_Client_API_Documentation.md) - AI detection service interface
+- [Scripts Usage Guide](docs/SCRIPTS.md) - Tool scripts usage guide
+- [Port Migration Guide](docs/PORT_MIGRATION.md) - Port configuration change record
 
-### 后端
-- **框架**: Spring Boot 3.2.0, Spring Cloud
-- **数据库**: PostgreSQL 15
-- **消息队列**: Apache Kafka 7.5.0
-- **缓存**: Redis 7.0
-- **认证**: JWT (JSON Web Token)
-- **API文档**: OpenAPI 3.0
+## 🛠️ Technology Stack
 
-### 前端
-- **框架**: React 18.3.1
-- **构建工具**: Vite 6.0
-- **路由**: React Router 7.1
-- **HTTP客户端**: Axios 1.7
-- **样式**: CSS Modules
+### Backend
+- **Framework**: Spring Boot 3.2.0, Spring Cloud
+- **Database**: PostgreSQL 15
+- **Message Queue**: Apache Kafka 7.5.0
+- **Cache**: Redis 7.0
+- **Authentication**: JWT (JSON Web Token)
+- **API Documentation**: OpenAPI 3.0
 
-### AI服务
-- **框架**: Flask (Python)
-- **模型**: Effort (Deepfake检测), DRCT (AIGC检测)
+### Frontend
+- **Framework**: React 18.3.1
+- **Build Tool**: Vite 6.0
+- **Router**: React Router 7.1
+- **HTTP Client**: Axios 1.7
+- **Styling**: CSS Modules
 
-- **深度学习**: PyTorch, OpenCV
-> **注意**: 本开源版本不包含完整的 AI 检测服务核心代码（闭源）。项目提供了一个 `scripts/mock-ai-service.py` 脚本用于演示系统功能流转。该脚本会模拟检测过程并返回随机结果。
+### AI Service
+
+#### Runtime Environment
+- **Python**: 3.10
+- **Deep Learning Framework**: PyTorch 2.1.1
+- **Models**: Effort (Deepfake detection), DRCT (AIGC detection)
+- **Service Framework**: Flask
+- **Compute Acceleration**: CUDA 11.3+ (GPU)
+
+#### Environment Configuration
+
+**1. Create Python Virtual Environment**
+   ```bash
+   # Create virtual environment
+   python3.10 -m venv venv
+   
+   # Activate virtual environment
+   # Windows
+   venv\Scripts\activate
+   
+   # Linux/Mac
+   source venv/bin/activate
+   ```
+
+**2. Install Dependencies**
+
+   ```bash
+   # PyTorch 2.1.1 (CUDA 11.8)
+   pip install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
+   
+   # Basic scientific computing libraries
+   pip install numpy==1.21.5
+   pip install pandas==1.4.2
+   pip install scipy==1.7.3
+   
+   # Image processing
+   pip install Pillow==9.0.1
+   pip install opencv-python==4.6.0.66
+   pip install imageio==2.9.0
+   pip install imgaug==0.4.0
+   pip install scikit-image==0.19.2
+   pip install albumentations==1.1.0
+   
+   # Deep learning model libraries
+   pip install efficientnet-pytorch==0.7.1
+   pip install timm==0.6.12
+   pip install segmentation-models-pytorch==0.3.2
+   pip install torchtoolbox==0.1.8.2
+   
+   # Face detection
+   pip install dlib==19.24.0
+   
+   # Image processing tools
+   pip install imutils==0.5.4
+   pip install tqdm==4.61.0
+   
+   # Data processing and visualization
+   pip install seaborn==0.11.2
+   pip install scikit-learn==1.0.2
+   
+   # Configuration and logging
+   pip install pyyaml==6.0
+   pip install setuptools==59.5.0
+   
+   # Web framework and tools
+   pip install flask
+   pip install tensorflow  # Optional, may be required for some models
+   
+   # Monitoring and visualization
+   pip install tensorboard==2.10.1
+   
+   # Advanced deep learning features
+   pip install loralib
+   pip install einops
+   
+   # NLP and multimodal models
+   pip install transformers
+   pip install git+https://github.com/openai/CLIP.git
+   
+   # Computer vision tools
+   pip install filterpy
+   pip install kornia
+   pip install fvcore
+   
+   # Data processing
+   pip install simplejson
+   ```
+
+**3. Verify Installation**
+   ```bash
+   python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
+   python -c "import cv2; print(f'OpenCV version: {cv2.__version__}')"
+   python -c "import transformers; print('Transformers installed successfully')"
+   ```
+
+**4. Start the AI Detection Service**
+   ```bash
+   # Ensure the virtual environment is activated
+   python ai_service/app.py
+   
+   # Or use Flask development server
+   flask --app ai_service.app run --port 5000
+   ```
+
+> **Note**: This open-source version does not include the complete AI detection service core code (closed-source). The project provides a `scripts/mock-ai-service.py` script for demonstrating system functionality. This script simulates the detection process and returns random results.
 
 ### DevOps
-- **容器化**: Docker, Docker Compose
-- **构建工具**: Maven
-- **版本控制**: Git
+- **Containerization**: Docker, Docker Compose
+- **Build Tool**: Maven
+- **Version Control**: Git
 
-## 📦 项目结构
+## 📦 Project Structure
 
 ```
 video-detection-system/
-├── auth-service/          # 认证服务
-├── video-service/         # 视频管理服务
-├── worker-service/        # 任务处理服务
-├── detection-service/     # 检测服务
-├── websocket-service/     # WebSocket通知服务
-├── audit-service/         # 审计日志服务
-├── common-lib/            # 公共库
-├── ai-client/             # AI服务客户端
-├── frontend/              # React前端
-├── scripts/               # 工具脚本
-├── docs/                  # 文档
-├── docker-compose.yml     # Docker编排配置
-└── pom.xml                # Maven父POM
+├── auth-service/          # Authentication service
+├── video-service/         # Video management service
+├── worker-service/        # Task processing service
+├── detection-service/     # Detection service
+├── websocket-service/     # WebSocket notification service
+├── audit-service/         # Audit logging service
+├── common-lib/            # Common library
+├── ai-client/             # AI service client
+├── frontend/              # React frontend
+├── scripts/               # Utility scripts
+├── docs/                  # Documentation
+├── docker-compose.yml     # Docker orchestration configuration
+└── pom.xml                # Maven parent POM
 ```
 
-## 🔧 配置说明
+## 🔧 Configuration Guide
 
-### 环境变量
+### Environment Variables
 
-关键配置项（需要根据实际环境修改）：
+Key configuration items (need to be modified according to your actual environment):
 
 ```yaml
-# 数据库配置
+# Database configuration
 POSTGRES_USER: admin
-POSTGRES_PASSWORD: your-password  # 对应后端配置中的 POSTGRES_PASSWORD
+POSTGRES_PASSWORD: your-password  # Corresponds to POSTGRES_PASSWORD in backend configuration
 POSTGRES_DB: video_detection
 
-# JWT密钥
-JWT_SECRET: your-secret-key       # 对应后端配置中的 JWT_SECRET
+# JWT secret
+JWT_SECRET: your-secret-key       # Corresponds to JWT_SECRET in backend configuration
 
-# AI服务地址
+# AI service address
 AI_SERVICE_URL: http://localhost:5000
 ```
 
-### 端口配置
+### Port Configuration
 
-| 服务 | 端口 | 说明 |
-|------|------|------|
-| auth-service | 9001 | 认证服务 |
-| video-service | 9002 | 视频服务 |
-| worker-service | 9003 | 任务处理 |
-| detection-service | 9004 | 检测服务 |
+| Service | Port | Description |
+|---------|------|-------------|
+| auth-service | 9001 | Authentication service |
+| video-service | 9002 | Video service |
+| worker-service | 9003 | Task processing |
+| detection-service | 9004 | Detection service |
 | websocket-service | 9005 | WebSocket |
-| audit-service | 9006 | 审计服务 |
-| PostgreSQL | 5432 | 数据库 |
-| Kafka | 19092 | 消息队列 |
-| Redis | 6379 | 缓存 |
-| AI Service | 5000 | AI检测 |
+| audit-service | 9006 | Audit service |
+| PostgreSQL | 5432 | Database |
+| Kafka | 19092 | Message queue |
+| Redis | 6379 | Cache |
+| AI Service | 5000 | AI detection |
 
-## 🧪 测试
+## 🧪 Testing
 
 ```bash
-# 运行单元测试
+# Run unit tests
 mvn test
 
-# 运行集成测试
+# Run integration tests
 mvn verify
 
-# 前端测试
+# Frontend tests
 cd frontend
 npm test
 ```
 
-## 📊 性能指标
+## 📊 Performance Metrics
 
-- **检测速度**: 平均1-3秒/视频（取决于视频长度和硬件）
-- **并发处理**: 支持多任务并发检测
-- **准确率**: Deepfake检测准确率 >90%（基于Effort模型）
+- **Detection Speed**: Average 1-3 seconds per video (depends on video length and hardware)
+- **Concurrent Processing**: Support for multi-task concurrent detection
+- **Accuracy**: Deepfake detection accuracy >90% (based on Effort model)
 
-## 🤝 贡献指南
+## 🤝 Contribution Guidelines
 
-欢迎贡献代码！请遵循以下步骤：
+Contributions are welcome! Please follow these steps:
 
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📝 许可证
+## 📝 License
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
-## 👥 作者
+## 👥 Authors
 
-- **RoeAcg** - *Initial work*
+- **RoeAcg** - Initial work
+- **Natsuki-nanami** - Algorithm reasoning framework
 
-## 🙏 致谢
+## 🙏 Acknowledgments
 
-- [DeepfakeBench](https://github.com/SCLBD/DeepfakeBench) - 深度学习模型
-- Spring Boot 社区
-- React 社区
+- [DeepfakeBench](https://github.com/SCLBD/DeepfakeBench) - Deep learning model benchmark
+- Effort - [Orthogonal Subspace Decomposition for Generalizable AI-Generated Image Detection](https://arxiv.org/abs/2411.15633)
+- DRCT - Diffusion Reconstruction Contrastive Training towards Universal Detection of Diffusion Generated Images
+- Spring Boot Community
+- React Community
 
-## 📮 联系方式
+## 📮 Contact Information
 
-- 项目主页: https://github.com/RoeAcg/Video-Detection-System
-- 问题反馈: https://github.com/RoeAcg/Video-Detection-System/issues
+- Project Homepage: [https://github.com/RoeAcg/Video-Detection-System](https://github.com/RoeAcg/Video-Detection-System)
+- Issue Feedback: [https://github.com/RoeAcg/Video-Detection-System/issues](https://github.com/RoeAcg/Video-Detection-System/issues)
 
 ---
 
-**注意**: 本项目仅供学习和研究使用，请勿用于非法用途。
+**Note**: This project is for learning and research purposes only. Please do not use for illegal purposes.
