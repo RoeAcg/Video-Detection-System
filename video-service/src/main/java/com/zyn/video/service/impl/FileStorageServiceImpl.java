@@ -44,8 +44,8 @@ public class FileStorageServiceImpl implements FileStorageService {
             Path targetPath = Paths.get(filePath);
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
-            log.info("文件存储成功: {}", filePath);
-            return filePath;
+            log.info("文件存储成功: {}", targetPath.toAbsolutePath());
+            return targetPath.toAbsolutePath().toString();
 
         } catch (IOException e) {
             throw new FileUploadException("文件存储失败", e);
@@ -101,8 +101,9 @@ public class FileStorageServiceImpl implements FileStorageService {
                 }
             }
 
-            log.info("分块合并成功: {}, 总分块数: {}", mergedFilePath, chunks.size());
-            return mergedFilePath;
+            String absolutePath = Paths.get(mergedFilePath).toAbsolutePath().toString();
+            log.info("分块合并成功: {}, 总分块数: {}", absolutePath, chunks.size());
+            return absolutePath;
 
         } catch (IOException e) {
             throw FileUploadException.chunkMergeFailure();

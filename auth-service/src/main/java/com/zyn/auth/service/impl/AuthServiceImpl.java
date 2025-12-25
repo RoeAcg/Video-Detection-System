@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +32,8 @@ public class AuthServiceImpl implements AuthService {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
+
+
 
     @Override
     @Transactional
@@ -50,26 +53,32 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(LoginRequest request) {
         log.info("用户登录: {}", request.getUsername());
 
-        // Spring Security认证
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+        try {
+            // Spring Security认证
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // 获取用户信息
-        User user = userService.findByUsername(request.getUsername());
+            // 获取用户信息
+            User user = userService.findByUsername(request.getUsername());
 
-        // 更新最后登录时间
-        userService.updateLastLoginTime(user.getId());
+            // 更新最后登录时间
+            userService.updateLastLoginTime(user.getId());
 
-        // 生成JWT令牌
-        String token = jwtTokenProvider.generateToken(user);
+            // 生成JWT令牌
+            String token = jwtTokenProvider.generateToken(user);
 
-        return buildAuthResponse(user, token);
+            return buildAuthResponse(user, token);
+
+        } catch (Exception e) {
+            log.error("登录失败", e);
+            throw e;
+        }
     }
 
     @Override
@@ -91,9 +100,29 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(String token) {
-        // 这里可以实现令牌黑名单机制
-        // 将令牌加入Redis黑名单，直到过期时间
+        String jwt = token.replace(SecurityConstants.JWT_TOKEN_PREFIX, "");
+        if (jwtTokenProvider.validateToken(jwt)) {
+             // Logic kept for potential future use (e.g. token blacklist)
+        }
         log.info("用户登出");
+    }
+
+    private String getClientIp() {
+        try {
+            org.springframework.web.context.request.ServletRequestAttributes attributes = 
+                (org.springframework.web.context.request.ServletRequestAttributes) org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
+            if (attributes != null) {
+                jakarta.servlet.http.HttpServletRequest request = attributes.getRequest();
+                String xForwardedFor = request.getHeader("X-Forwarded-For");
+                if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
+                    return xForwardedFor.split(",")[0].trim();
+                }
+                return request.getRemoteAddr();
+            }
+        } catch (Exception e) {
+            // ignore
+        }
+        return "Unknown";
     }
 
     @Override

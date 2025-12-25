@@ -53,4 +53,8 @@ public class DetectionTask extends BaseEntity {
     @Column(name = "retry_count")
     @Builder.Default
     private Integer retryCount = 0;
+    
+    @Column(name = "mode", length = 20)
+    @Builder.Default
+    private String mode = "standard";  // 检测模式: standard 或 aigc
 }

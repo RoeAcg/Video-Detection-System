@@ -1,6 +1,6 @@
 # 服务配置
 server:
-  port: 8084
+  port: 9004
 
 spring:
   application:
@@ -10,7 +10,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/video_detection
     username: postgres
-    password: postgres
+    password: ${POSTGRES_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   # JPA配置
@@ -25,7 +25,7 @@ spring:
   # Redis配置
   data:
     redis:
-      host: localhost
+      host: 192.168.100.104
       port: 6379
       password:
       database: 0
@@ -44,8 +44,32 @@ spring.cache:
     time-to-live: 3600000  # 1小时
     cache-null-values: false
 
+  # Kafka配置
+spring.kafka:
+  bootstrap-servers: localhost:19092
+  consumer:
+    group-id: detection-group
+    auto-offset-reset: earliest
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.trusted.packages: "*"
+      spring.json.type.mapping: "detectionTask:com.zyn.common.dto.event.DetectionTaskEvent"
+
 # 日志配置
 logging:
   level:
     root: INFO
     com.zyn.detection: DEBUG
+
+# AI服务配置
+ai:
+  service:
+    url: http://127.0.0.1:5000
+
+# JWT配置
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJWTTokenGenerationAndValidation12345678901234567890}
+  expiration: 86400000  # 24小时
+
+

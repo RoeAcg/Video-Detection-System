@@ -49,7 +49,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     @Transactional
-    public VideoUploadResponse uploadVideo(MultipartFile file, String description, Long userId) {
+    public VideoUploadResponse uploadVideo(MultipartFile file, String description, Long userId, String mode) {
         // 验证文件
         validateVideoFile(file);
 
@@ -81,10 +81,10 @@ public class VideoServiceImpl implements VideoService {
         log.info("视频保存成功: videoId={}, hash={}", video.getId(), fileHash);
 
         // 创建检测任务
-        String taskId = createDetectionTask(video, userId);
+        String taskId = createDetectionTask(video, userId, mode);
 
         // 发送Kafka消息
-        sendDetectionTaskEvent(video, taskId, userId);
+        sendDetectionTaskEvent(video, taskId, userId, mode);
 
         return VideoUploadResponse.builder()
                 .taskId(taskId)
@@ -188,11 +188,11 @@ public class VideoServiceImpl implements VideoService {
         fileStorageService.cleanupChunks(fileId);
         chunkMetadataRepository.deleteByFileId(fileId);
 
-        // 创建检测任务
-        String taskId = createDetectionTask(video, userId);
+        // 创建检测任务（分块上传默认使用standard模式）
+        String taskId = createDetectionTask(video, userId, "standard");
 
         // 发送Kafka消息
-        sendDetectionTaskEvent(video, taskId, userId);
+        sendDetectionTaskEvent(video, taskId, userId, "standard");
 
         return VideoUploadResponse.builder()
                 .taskId(taskId)
@@ -248,15 +248,15 @@ public class VideoServiceImpl implements VideoService {
     }
 
     /**
-     * 验证视频文件
+     * 验证媒体文件（视频或图片）
      */
     private void validateVideoFile(MultipartFile file) {
         if (file.isEmpty()) {
             throw new FileUploadException("文件为空");
         }
 
-        if (!FileUtil.isValidVideoFormat(file.getOriginalFilename())) {
-            throw FileUploadException.invalidFileType("mp4, avi, mov, mkv, webm");
+        if (!FileUtil.isValidMediaFormat(file.getOriginalFilename())) {
+            throw FileUploadException.invalidFileType("mp4, avi, mov, mkv, webm, jpg, jpeg, png, bmp, gif");
         }
 
         if (!FileUtil.isValidFileSize(file.getSize(), AppConstants.MAX_FILE_SIZE)) {
@@ -278,7 +278,7 @@ public class VideoServiceImpl implements VideoService {
     /**
      * 创建检测任务
      */
-    private String createDetectionTask(Video video, Long userId) {
+    private String createDetectionTask(Video video, Long userId, String mode) {
         String taskId = UUID.randomUUID().toString();
 
         DetectionTask task = DetectionTask.builder()
@@ -298,13 +298,14 @@ public class VideoServiceImpl implements VideoService {
     /**
      * 发送检测任务事件到Kafka
      */
-    private void sendDetectionTaskEvent(Video video, String taskId, Long userId) {
+    private void sendDetectionTaskEvent(Video video, String taskId, Long userId, String mode) {
         DetectionTaskEvent event = DetectionTaskEvent.builder()
                 .taskId(taskId)
                 .videoId(video.getId())
                 .userId(userId)
                 .videoPath(video.getFilePath())
                 .fileHash(video.getFileHash())
+                .mode(mode)
                 .timestamp(LocalDateTime.now())
                 .build();
 

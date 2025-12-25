@@ -21,21 +21,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AiServiceClient {
 
     /**
-     * 提交视频检测任务
+     * 提交视频/图片检测任务
      */
-    @PostMapping("/api/v1/detect")
+    @PostMapping("/api/detect")
     AiDetectionResponse detect(@RequestBody AiDetectionRequest request);
 
     /**
-     * 获取模型信息
+     * 获取模型信息 (暂未对应API，保留或移除，这里暂时移除以匹配文档)
      */
-    @GetMapping("/api/v1/model/info")
-    AiModelInfo getModelInfo();
+    // @GetMapping("/api/v1/model/info")
+    // AiModelInfo getModelInfo();
 
     /**
      * 健康检查
      */
-    @GetMapping("/api/v1/health")
+    @GetMapping("/health")
     String healthCheck();
 }
 

@@ -62,6 +62,20 @@ public class JwtTokenProvider {
     }
 
     /**
+     * 从令牌中获取用户ID
+     */
+    public Long getUserIdFromToken(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get(SecurityConstants.JWT_CLAIM_USER_ID, Long.class);
+    }
+
+    /**
      * 验证JWT令牌
      */
     public boolean validateToken(String token) {

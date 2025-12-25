@@ -20,4 +20,6 @@ public interface DetectionTaskRepository extends JpaRepository<DetectionTask, Lo
     Page<DetectionTask> findByUserId(Long userId, Pageable pageable);
 
     Page<DetectionTask> findByUserIdAndStatus(Long userId, TaskStatus status, Pageable pageable);
+
+    long countByUserId(Long userId);
 }

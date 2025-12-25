@@ -1,6 +1,6 @@
 # 服务配置
 server:
-  port: 8086
+  port: 9006
 
 spring:
   application:
@@ -10,7 +10,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/video_detection
     username: postgres
-    password: postgres
+    password: ${POSTGRES_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   # JPA配置
@@ -30,6 +30,17 @@ spring:
         max-size: 10
         queue-capacity: 100
 
+  # Kafka Config
+  kafka:
+    bootstrap-servers: localhost:19092
+    consumer:
+      group-id: audit-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
 # 审计配置
 audit:
   retention-days: 90  # 审计日志保留天数
@@ -41,3 +52,9 @@ logging:
     root: INFO
     com.zyn.audit: DEBUG
     org.springframework.aop: DEBUG
+
+# JWT配置
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJWTTokenGenerationAndValidation12345678901234567890}
+  expiration: 86400000  # 24小时
+

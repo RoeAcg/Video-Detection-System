@@ -23,24 +23,17 @@ public class AiServiceFallback implements AiServiceClient {
                 .taskId(request.getTaskId())
                 .result("UNCERTAIN")
                 .confidence(BigDecimal.valueOf(0.0))
-                .success(false)
-                .errorMessage("AI服务暂时不可用，请稍后重试")
+                .error("AI服务暂时不可用，请稍后重试")
                 .processingTimeMs(0L)
                 .framesAnalyzed(0)
                 .build();
     }
 
-    @Override
-    public AiModelInfo getModelInfo() {
-        log.warn("AI服务不可用，无法获取模型信息");
-
-        return AiModelInfo.builder()
-                .modelName("unknown")
-                .version("N/A")
-                .available(false)
-                .description("AI服务暂时不可用")
-                .build();
-    }
+    // @Override
+    // public AiModelInfo getModelInfo() {
+    //     log.warn("AI服务不可用，无法获取模型信息");
+    //     return AiModelInfo.builder().build();
+    // }
 
     @Override
     public String healthCheck() {

@@ -60,6 +60,19 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Spring Kafka -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- AI Client -->
+        <dependency>
+            <groupId>com.zyn</groupId>
+            <artifactId>ai-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

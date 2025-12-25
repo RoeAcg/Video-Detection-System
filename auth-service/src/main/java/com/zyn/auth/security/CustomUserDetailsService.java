@@ -28,7 +28,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("用户不存在: " + username));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new com.zyn.common.security.CustomUserDetails(
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getIsActive(),

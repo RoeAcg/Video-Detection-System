@@ -8,7 +8,7 @@ fi
 BACKUP_FILE=$1
 
 echo "开始恢复数据库..."
-gunzip -c $BACKUP_FILE | docker exec -i vds-postgres psql -U postgres video_detection
+gunzip -c $BACKUP_FILE | docker exec -i video-detection-db psql -U admin video_detection
 
 if [ $? -eq 0 ]; then
     echo "✅ 恢复成功"

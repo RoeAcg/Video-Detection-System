@@ -54,7 +54,7 @@ public class AuditLogController {
      * 查询用户操作日志
      */
     @GetMapping("/logs/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<PageResponse<AuditLog>> getUserAuditLogs(
             @PathVariable Long userId,
             @RequestParam(defaultValue = "0") int page,

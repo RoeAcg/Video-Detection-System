@@ -13,7 +13,7 @@ public interface VideoService {
     /**
      * 上传视频（小文件）
      */
-    VideoUploadResponse uploadVideo(MultipartFile file, String description, Long userId);
+    VideoUploadResponse uploadVideo(MultipartFile file, String description, Long userId, String mode);
 
     /**
      * 初始化分块上传

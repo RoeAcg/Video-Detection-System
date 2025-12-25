@@ -119,15 +119,18 @@ public class DetectionProcessorImpl implements DetectionProcessor {
      * 调用AI服务
      */
     private AiDetectionResponse callAiService(DetectionTaskEvent event) {
+        // 使用事件中的mode，如果为空则默认为standard
+        String mode = event.getMode() != null ? event.getMode() : "standard";
+        
         AiDetectionRequest request = AiDetectionRequest.builder()
                 .taskId(event.getTaskId())
                 .videoPath(event.getVideoPath())
                 .fileHash(event.getFileHash())
-                .mode("standard")
+                .mode(mode)
                 .frameRate(5)
                 .maxFrames(300)
-                .includeFeatures(true)
-                .timeoutSeconds(120)
+                // .includeFeatures(true) // 已移除
+                // .timeoutSeconds(120)  // 已移除
                 .build();
 
         return aiServiceClient.detect(request);
@@ -138,11 +141,18 @@ public class DetectionProcessorImpl implements DetectionProcessor {
      */
     private DetectionResult saveDetectionResult(DetectionTaskEvent event,
                                                 AiDetectionResponse aiResponse) {
+        DetectionResultEnum resultEnum = DetectionResultEnum.UNCERTAIN;
+        if ("FAKE".equalsIgnoreCase(aiResponse.getResult())) {
+            resultEnum = DetectionResultEnum.FAKE;
+        } else if ("REAL".equalsIgnoreCase(aiResponse.getResult())) {
+            resultEnum = DetectionResultEnum.AUTHENTIC;
+        }
+
         DetectionResult result = DetectionResult.builder()
                 .taskId(event.getTaskId())
                 .videoId(event.getVideoId())
                 .userId(event.getUserId())
-                .prediction(DetectionResultEnum.valueOf(aiResponse.getResult()))
+                .prediction(resultEnum)
                 .confidence(aiResponse.getConfidence())
                 .modelVersion(aiResponse.getModelVersion())
                 .processingTimeMs(aiResponse.getProcessingTimeMs())
@@ -162,11 +172,18 @@ public class DetectionProcessorImpl implements DetectionProcessor {
     private void sendCompletedNotification(DetectionTaskEvent event,
                                            DetectionResult result,
                                            AiDetectionResponse aiResponse) {
+        DetectionResultEnum resultEnum = DetectionResultEnum.UNCERTAIN;
+        if ("FAKE".equalsIgnoreCase(aiResponse.getResult())) {
+            resultEnum = DetectionResultEnum.FAKE;
+        } else if ("REAL".equalsIgnoreCase(aiResponse.getResult())) {
+            resultEnum = DetectionResultEnum.AUTHENTIC;
+        }
+
         DetectionCompletedEvent completedEvent = DetectionCompletedEvent.builder()
                 .taskId(event.getTaskId())
                 .detectionId(result.getId())
                 .userId(event.getUserId())
-                .result(DetectionResultEnum.valueOf(aiResponse.getResult()))
+                .result(resultEnum)
                 .confidence(aiResponse.getConfidence())
                 .timestamp(LocalDateTime.now())
                 .build();

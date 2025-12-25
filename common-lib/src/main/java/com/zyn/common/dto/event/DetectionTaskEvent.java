@@ -29,6 +29,8 @@ public class DetectionTaskEvent implements Serializable {
 
     private String fileHash;
 
+    private String mode = "standard";  // 检测模式: standard 或 aigc
+    
     private Integer frameCount;
 
     private LocalDateTime timestamp;

@@ -1,6 +1,7 @@
 package com.zyn.video.controller;
 
 import com.zyn.common.constant.AppConstants;
+import com.zyn.common.annotation.AuditLog;
 import com.zyn.common.dto.response.PageResponse;
 import com.zyn.common.dto.response.VideoUploadResponse;
 import com.zyn.common.entity.Video;
@@ -29,17 +30,19 @@ public class VideoController {
     /**
      * 上传视频（小文件直接上传）
      */
+    @AuditLog(action = "UPLOAD_VIDEO", resourceType = "VIDEO", details = "'Uploaded video: ' + #file.originalFilename + ' (Mode: ' + #mode + ')'")
     @PostMapping("/upload")
     public ResponseEntity<VideoUploadResponse> uploadVideo(
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "mode", defaultValue = "standard") String mode,
             Authentication authentication) {
 
-        log.info("接收到视频上传请求: {}, 大小: {} bytes",
-                file.getOriginalFilename(), file.getSize());
+        log.info("接收到视频上传请求: {}, 大小: {} bytes, 模式: {}",
+                file.getOriginalFilename(), file.getSize(), mode);
 
         Long userId = getUserIdFromAuth(authentication);
-        VideoUploadResponse response = videoService.uploadVideo(file, description, userId);
+        VideoUploadResponse response = videoService.uploadVideo(file, description, userId, mode);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -84,6 +87,7 @@ public class VideoController {
     /**
      * 分块上传 - 完成上传
      */
+    @AuditLog(action = "UPLOAD_COMPLETE", resourceType = "VIDEO", details = "'Completed upload for fileId: ' + #fileId")
     @PostMapping("/upload/complete")
     public ResponseEntity<VideoUploadResponse> completeChunkUpload(
             @RequestParam("fileId") String fileId,
@@ -132,6 +136,7 @@ public class VideoController {
     /**
      * 删除视频
      */
+    @AuditLog(action = "DELETE_VIDEO", resourceType = "VIDEO", details = "'Deleted video with ID: ' + #videoId")
     @DeleteMapping("/{videoId}")
     public ResponseEntity<String> deleteVideo(@PathVariable Long videoId,
                                               Authentication authentication) {

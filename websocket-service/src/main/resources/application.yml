@@ -1,14 +1,17 @@
 # 服务配置
 server:
-  port: 8085
+  port: 9005
 
 spring:
+  
   application:
     name: websocket-service
 
   # Kafka配置
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:19092
+    listener:
+      ack-mode: MANUAL
     consumer:
       group-id: notification-workers
       auto-offset-reset: earliest
@@ -17,6 +20,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: com.zyn.common.dto.event
+        spring.json.type.mapping: "detectionCompleted:com.zyn.common.dto.event.DetectionCompletedEvent"
 
   # Redis配置（可选，用于分布式会话管理）
   data:

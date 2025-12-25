@@ -25,6 +25,9 @@ public final class FileUtil {
 
     private static final List<String> ALLOWED_VIDEO_EXTENSIONS =
             Arrays.asList("mp4", "avi", "mov", "mkv", "webm");
+    
+    private static final List<String> ALLOWED_IMAGE_EXTENSIONS =
+            Arrays.asList("jpg", "jpeg", "png", "bmp", "gif");
 
     /**
      * 获取文件扩展名
@@ -42,6 +45,21 @@ public final class FileUtil {
     public static boolean isValidVideoFormat(String filename) {
         String extension = getExtension(filename);
         return ALLOWED_VIDEO_EXTENSIONS.contains(extension);
+    }
+
+    /**
+     * 验证图片文件格式
+     */
+    public static boolean isValidImageFormat(String filename) {
+        String extension = getExtension(filename);
+        return ALLOWED_IMAGE_EXTENSIONS.contains(extension);
+    }
+    
+    /**
+     * 验证视频或图片文件格式
+     */
+    public static boolean isValidMediaFormat(String filename) {
+        return isValidVideoFormat(filename) || isValidImageFormat(filename);
     }
 
     /**

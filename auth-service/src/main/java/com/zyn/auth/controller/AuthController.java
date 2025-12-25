@@ -1,6 +1,7 @@
 package com.zyn.auth.controller;
 
 import com.zyn.auth.service.AuthService;
+import com.zyn.common.annotation.AuditLog;
 import com.zyn.common.dto.request.LoginRequest;
 import com.zyn.common.dto.request.RegisterRequest;
 import com.zyn.common.dto.response.AuthResponse;
@@ -24,6 +25,7 @@ public class AuthController {
     /**
      * 用户注册
      */
+    @AuditLog(action = "USER_REGISTER", resourceType = "USER", details = "'User ' + #request.username + ' registered'")
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         log.info("用户注册请求: {}", request.getUsername());
@@ -34,6 +36,7 @@ public class AuthController {
     /**
      * 用户登录
      */
+    @AuditLog(action = "USER_LOGIN", resourceType = "USER", details = "'User ' + #request.username + ' logged in'")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         log.info("用户登录请求: {}", request.getUsername());
@@ -54,6 +57,7 @@ public class AuthController {
     /**
      * 登出
      */
+    @AuditLog(action = "USER_LOGOUT", resourceType = "USER", details = "'User logged out'")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
         log.info("用户登出请求");

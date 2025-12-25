@@ -1,6 +1,6 @@
 # 服务配置
 server:
-  port: 8092
+  port: 9002
 
 spring:
   application:
@@ -14,7 +14,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/video_detection
     username: postgres
-    password: postgres
+    password: ${POSTGRES_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   # JPA配置
@@ -28,7 +28,7 @@ spring:
 
   # Kafka配置
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:19092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -50,7 +50,7 @@ file:
 
 # JWT 配置
 jwt:
-  secret: mySecretKeyForJWTTokenGenerationAndValidation12345678901234567890
+  secret: ${JWT_SECRET:mySecretKeyForJWTTokenGenerationAndValidation12345678901234567890}
   expiration: 86400000  # 24小时（毫秒）
 
 # 日志配置
