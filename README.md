@@ -180,7 +180,7 @@ Video Detection System is an enterprise-grade video deepfake detection platform 
 **1. Create Python Virtual Environment**
    ```bash
    # Create virtual environment
-   python3.10 -m venv venv
+   python3.10 -m venv Video_Detection_System
    
    # Activate virtual environment
    # Windows
