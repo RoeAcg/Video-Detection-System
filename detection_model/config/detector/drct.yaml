@@ -1,0 +1,22 @@
+# training/config/detector/drct.yaml
+
+# 模型注册名，必须与 drct_detector.py 中 @DETECTOR.register_module 一致
+model_name: drct
+
+# DRCT 特有参数 (对应 clip-ViT-L-14_224_drct_amp_crop.pth)
+backbone_name: clip-ViT-L-14
+embedding_size: 1024  # 关键：必须为 1024 才能匹配权重中的 fc 维度
+
+# 数据集相关
+num_classes: 2
+image_size: 224
+
+# 预处理均值和方差 (CLIP 官方标准)
+# DeepfakeBench 的 dataset loader 会读取这些值
+mean: [0.48145466, 0.4578275, 0.40821073]
+std: [0.26862954, 0.26130258, 0.27577711]
+
+# 标签定义
+label_dict:
+  real: 0
+  fake: 1
