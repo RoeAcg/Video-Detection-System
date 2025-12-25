@@ -260,7 +260,7 @@ npm test
 
 ## 👥 作者
 
-- **Your Name** - *Initial work*
+- **RoeAcg** - *Initial work*
 
 ## 🙏 致谢
 
@@ -270,8 +270,8 @@ npm test
 
 ## 📮 联系方式
 
-- 项目主页: https://github.com/yourusername/video-detection-system
-- 问题反馈: https://github.com/yourusername/video-detection-system/issues
+- 项目主页: https://github.com/RoeAcg/Video-Detection-System
+- 问题反馈: https://github.com/RoeAcg/Video-Detection-System/issues
 
 ---
 
